@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <android.support.v7.preference.EditTextPreference
-        android:defaultValue="http://192.168.0.102/switchOneOn"
+        android:defaultValue="http://localhost/switch-on"
         android:key="preference_s1_on"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:summary="@string/preferenceS1On"
         android:title="@string/preferenceS1OnTitle" />
     <android.support.v7.preference.EditTextPreference
-        android:defaultValue="http://192.168.0.102/switchOneOff"
+        android:defaultValue="http://localhost/switch-off"
         android:key="preference_s1_off"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:summary="@string/preferenceS1Off"
         android:title="@string/preferenceS1OffTitle" />
     <android.support.v7.preference.EditTextPreference
-        android:defaultValue="http://192.168.0.102/switchOneStatus"
+        android:defaultValue="http://localhost/switch-get-status"
         android:key="preference_s1_status"
         android:selectAllOnFocus="true"
         android:singleLine="true"

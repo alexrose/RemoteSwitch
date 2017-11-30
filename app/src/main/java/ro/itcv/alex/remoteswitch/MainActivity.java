@@ -3,9 +3,12 @@ package ro.itcv.alex.remoteswitch;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +23,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,12 +40,34 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         try {
-            URL url = new URL("http://192.168.0.102/switchOneStatus");
+            URL url = new URL(getPreferenceS1Status());
             new GetClass(this, url).execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
+    }
+
+    @NonNull
+    private String getPreferenceS1On() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPref.getString(SettingsActivity.KEY_PREF_S1_ON, "http://localhost/switch-on");
+    }
+
+    private String getPreferenceS1Off() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPref.getString(SettingsActivity.KEY_PREF_S1_OFF, "http://localhost/switch-off");
+    }
+
+    private String getPreferenceS1Status() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPref.getString(SettingsActivity.KEY_PREF_S1_STATUS, "http://localhost/switch-get-status");
     }
 
     @Override
@@ -140,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void turnSwitchOneOn(View View) {
         try {
-            URL url = new URL("http://192.168.0.102/switchOneOn");
+            URL url = new URL(getPreferenceS1On());
             new GetClass(this, url).execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -149,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void turnSwitchOneOff(View View) {
         try {
-            URL url = new URL("http://192.168.0.102/switchOneOff");
+            URL url = new URL(getPreferenceS1Off());
             new GetClass(this, url).execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
