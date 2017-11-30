@@ -2,13 +2,16 @@ package ro.itcv.alex.remoteswitch;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         try {
-            URL url = new URL("https://dev.itcv.ro/wemos.php");
+            URL url = new URL("http://192.168.0.102/switchOneStatus");
             new GetClass(this, url).execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -57,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -98,7 +103,18 @@ public class MainActivity extends AppCompatActivity {
                 br.close();
 
                 JSONObject jObject = new JSONObject(responseOutput.toString());
-                final String switchOneStatus = jObject.getString("switchOne");
+                final String switchOneStatus = jObject.getString("SwitchOne");
+
+//                Button switchOneOnButton = findViewById(R.id.switchOneOn);
+//                Button switchOneOffButton = findViewById(R.id.switchOneOff);
+//
+//                if (switchOneStatus.equals("off")) {
+//                    switchOneOnButton.setVisibility(View.VISIBLE);
+//                    switchOneOffButton.setVisibility(View.GONE);
+//                } else {
+//                    switchOneOnButton.setVisibility(View.GONE);
+//                    switchOneOffButton.setVisibility(View.VISIBLE);
+//                }
 
                 MainActivity.this.runOnUiThread(new Runnable() {
 
@@ -108,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                         progress.dismiss();
                     }
                 });
+
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -123,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void turnSwitchOneOn(View View) {
         try {
-            URL url = new URL("https://dev.itcv.ro/wemos.php");
+            URL url = new URL("http://192.168.0.102/switchOneOn");
             new GetClass(this, url).execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -132,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void turnSwitchOneOff(View View) {
         try {
-            URL url = new URL("https://dev.itcv.ro/wemos.php");
+            URL url = new URL("http://192.168.0.102/switchOneOff");
             new GetClass(this, url).execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
