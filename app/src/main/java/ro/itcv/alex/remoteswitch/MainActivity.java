@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
@@ -14,8 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Switch;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +23,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,35 +38,44 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
         try {
-            URL url = new URL(getPreferenceS1Status());
+            URL url = new URL(getPreferenceSwitchStatus());
             new GetClass(this, url).execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
-    }
+        final Switch switchOneToggle = findViewById(R.id.switchOneToggle);
 
-    @NonNull
-    private String getPreferenceS1On() {
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        switchOneToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (switchOneToggle.isChecked())
+                    turnSwitchOne(true);
+                else
+                    turnSwitchOne(false);
+            }
+        });
 
-        return sharedPref.getString(SettingsActivity.KEY_PREF_S1_ON, "http://localhost/switch-on");
-    }
-
-    private String getPreferenceS1Off() {
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-        return sharedPref.getString(SettingsActivity.KEY_PREF_S1_OFF, "http://localhost/switch-off");
-    }
-
-    private String getPreferenceS1Status() {
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-        return sharedPref.getString(SettingsActivity.KEY_PREF_S1_STATUS, "http://localhost/switch-get-status");
+        final Switch switchTwoToggle = findViewById(R.id.switchTwoToggle);
+        switchTwoToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (switchTwoToggle.isChecked())
+                    turnSwitchTwo(true);
+                else
+                    turnSwitchTwo(false);
+            }
+        });
     }
 
     @Override
@@ -113,15 +121,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... params) {
             try {
-                final TextView outputView = (TextView) findViewById(R.id.switchOneStatus);
+                final Switch switchOneToggle = findViewById(R.id.switchOneToggle);
+                final Switch switchTwoToggle = findViewById(R.id.switchTwoToggle);
 
                 HttpURLConnection connection = (HttpURLConnection)this.url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("USER-AGENT", "Mozilla/5.0");
                 connection.setRequestProperty("ACCEPT-LANGUAGE", "en-US,en;0.5");
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String line = "";
+                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 StringBuilder responseOutput = new StringBuilder();
                 while((line = br.readLine()) != null ) {
                     responseOutput.append(line);
@@ -129,24 +138,25 @@ public class MainActivity extends AppCompatActivity {
                 br.close();
 
                 JSONObject jObject = new JSONObject(responseOutput.toString());
-                final String switchOneStatus = jObject.getString("SwitchOne");
-
-//                Button switchOneOnButton = findViewById(R.id.switchOneOn);
-//                Button switchOneOffButton = findViewById(R.id.switchOneOff);
-//
-//                if (switchOneStatus.equals("off")) {
-//                    switchOneOnButton.setVisibility(View.VISIBLE);
-//                    switchOneOffButton.setVisibility(View.GONE);
-//                } else {
-//                    switchOneOnButton.setVisibility(View.GONE);
-//                    switchOneOffButton.setVisibility(View.VISIBLE);
-//                }
+                final String switchOneStatus = jObject.getString(getPreferenceS1Id());
+                final String switchTwoStatus = jObject.getString(getPreferenceS2Id());
 
                 MainActivity.this.runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
-                        outputView.setText(switchOneStatus);
+                        if (switchOneStatus.equals("off")) {
+                            switchOneToggle.setChecked(false);
+                        } else {
+                            switchOneToggle.setChecked(true);
+                        }
+
+                        if (switchTwoStatus.equals("off")) {
+                            switchTwoToggle.setChecked(false);
+                        } else {
+                            switchTwoToggle.setChecked(true);
+                        }
+
                         progress.dismiss();
                     }
                 });
@@ -164,21 +174,80 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void turnSwitchOneOn(View View) {
+    private void turnSwitchOne(Boolean turnOn) {
         try {
-            URL url = new URL(getPreferenceS1On());
-            new GetClass(this, url).execute();
+            if (turnOn) {
+                URL url = new URL(getPreferenceS1On());
+                new GetClass(this, url).execute();
+            } else {
+                URL url = new URL(getPreferenceS1Off());
+                new GetClass(this, url).execute();
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
 
-    public void turnSwitchOneOff(View View) {
+    private void turnSwitchTwo(Boolean turnOn) {
         try {
-            URL url = new URL(getPreferenceS1Off());
-            new GetClass(this, url).execute();
+            if (turnOn) {
+                URL url = new URL(getPreferenceS2On());
+                new GetClass(this, url).execute();
+            } else {
+                URL url = new URL(getPreferenceS2Off());
+                new GetClass(this, url).execute();
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getPreferenceSwitchStatus() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPref.getString(SettingsActivity.KEY_PREF_SWITCH_STATUS, "http://localhost/switch-get-status");
+    }
+
+    private String getPreferenceS1On() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPref.getString(SettingsActivity.KEY_PREF_S1_ON, "http://localhost/switch-on");
+    }
+
+    private String getPreferenceS1Off() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPref.getString(SettingsActivity.KEY_PREF_S1_OFF, "http://localhost/switch-off");
+    }
+
+    public String getPreferenceS1Id() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPref.getString(SettingsActivity.KEY_PREF_S1_ID, "s1id");
+    }
+
+    public String getPreferenceS2On() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPref.getString(SettingsActivity.KEY_PREF_S2_ON, "http://localhost/switch-on");
+    }
+
+    private String getPreferenceS2Off() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPref.getString(SettingsActivity.KEY_PREF_S2_OFF, "http://localhost/switch-off");
+    }
+
+    private String getPreferenceS2Id() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        return sharedPref.getString(SettingsActivity.KEY_PREF_S2_ID, "s2id");
     }
 }

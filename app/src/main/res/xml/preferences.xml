@@ -1,24 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.v7.preference.EditTextPreference
-        android:defaultValue="http://localhost/switch-on"
-        android:key="preference_s1_on"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="@string/preferenceS1On"
-        android:title="@string/preferenceS1OnTitle" />
-    <android.support.v7.preference.EditTextPreference
-        android:defaultValue="http://localhost/switch-off"
-        android:key="preference_s1_off"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="@string/preferenceS1Off"
-        android:title="@string/preferenceS1OffTitle" />
-    <android.support.v7.preference.EditTextPreference
-        android:defaultValue="http://localhost/switch-get-status"
-        android:key="preference_s1_status"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:summary="@string/preferenceS1Status"
-        android:title="@string/preferenceS1StatusTitle" />
+    <PreferenceCategory
+        android:title="@string/SwitchGeneral"
+        android:textSize="10dp">
+        <EditTextPreference
+            android:defaultValue="http://localhost/switch-get-status"
+            android:key="preference_switch_status"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:dialogTitle="@string/preferenceSwitchStatusTitle"
+            android:summary="@string/preferenceSwitchStatus" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/SwitchOneCategory"
+        android:textSize="10dp">
+        <EditTextPreference
+            android:defaultValue="http://localhost/switch-on"
+            android:key="preference_s1_on"
+            android:selectAllOnFocus="true"
+            android:dialogTitle="@string/preferenceS1OnTitle"
+            android:summary="@string/preferenceS1On" />
+        <EditTextPreference
+            android:defaultValue="http://localhost/switch-off"
+            android:key="preference_s1_off"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:dialogTitle="@string/preferenceS1OffTitle"
+            android:summary="@string/preferenceS1Off" />
+        <EditTextPreference
+            android:defaultValue="s1id"
+            android:key="preference_s1_id"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:dialogTitle="@string/preferenceS1IdTitle"
+            android:summary="@string/preferenceS1Id" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/SwitchTwoCategory"
+        android:textSize="10dp">
+        <EditTextPreference
+            android:defaultValue="http://localhost/switch-on"
+            android:key="preference_s2_on"
+            android:selectAllOnFocus="true"
+            android:dialogTitle="@string/preferenceS2OnTitle"
+            android:summary="@string/preferenceS2On" />
+        <EditTextPreference
+            android:defaultValue="http://localhost/switch-off"
+            android:key="preference_s2_off"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:dialogTitle="@string/preferenceS2OffTitle"
+            android:summary="@string/preferenceS2Off" />
+        <EditTextPreference
+            android:defaultValue="s2id"
+            android:key="preference_s2_id"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:dialogTitle="@string/preferenceS2IdTitle"
+            android:summary="@string/preferenceS2Id" />
+    </PreferenceCategory>
 </PreferenceScreen>

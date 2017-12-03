@@ -5,9 +5,20 @@
     <string name="preferenceS1OnTitle">SwitchOne ON</string>
     <string name="preferenceS1Off">SwitchOne OFF URL</string>
     <string name="preferenceS1OffTitle">SwitchOne OFF</string>
-    <string name="preferenceS1Status">SwitchOne Status URL</string>
-    <string name="preferenceS1StatusTitle">SwitchOne Status</string>
+    <string name="preferenceS1Id">SwitchOne ID</string>
+    <string name="preferenceS1IdTitle">SwitchOne ID</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="preferenceS2On">SwitchTwo ON URL</string>
+    <string name="preferenceS2OnTitle">SwitchTwo ON</string>
+    <string name="preferenceS2Off">SwitchTwo OFF URL</string>
+    <string name="preferenceS2OffTitle">SwitchTwo OFF</string>
+    <string name="preferenceS2Id">SwitchTwo ID</string>
+    <string name="preferenceS2IdTitle">SwitchTwo ID</string>
+
+    <string name="preferenceSwitchStatus">Switch Status URL</string>
+    <string name="preferenceSwitchStatusTitle">Switch Status</string>
+
+    <string name="SwitchOneCategory">Switch One</string>
+    <string name="SwitchTwoCategory">Switch Two</string>
+    <string name="SwitchGeneral">General</string>
 </resources>
